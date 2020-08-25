@@ -1,0 +1,6 @@
+interface remote_service {
+ void result_cb(string sender, int id, int result) delegate;
+
+ int send(int id, string body, result_cb cb);
+ int send_sync(int id, string body);
+}

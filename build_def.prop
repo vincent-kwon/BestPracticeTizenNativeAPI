@@ -1,0 +1,5 @@
+# Add pre/post build process
+PREBUILD_DESC = Pre
+PREBUILD_COMMAND = tidlc -p -l C -i ./src/tidl/remote_service.tidl -o remote_service_proxy; mv remote_service_proxy.c src/; mv remote_service_proxy.h include/; tidlc -s -l C -i ./src/tidl/remote_service.tidl -o remote_service_stub; mv remote_service_stub.c src/; mv remote_service_stub.h include/;
+POSTBUILD_DESC = Post
+POSTBUILD_COMMAND = rm -f src/remote_service_proxy.c; rm -f src/remote_service_stub.c; rm -f include/remote_service_proxy.h; rm -f include/remote_service_stub.h;
