@@ -7,7 +7,14 @@ License:    Apache-2.0
 Source0:    %{name}-%{version}.tar.gz
 Source1001:     capi-bps-bp-tizen.manifest
 BuildRequires:  cmake
+BuildRequires:  tidl
+BuildRequires:  pkgconfig(rpc-port)
+BuildRequires:  pkgconfig(glib-2.0)
+BuildRequires:  pkgconfig(capi-base-common)
 BuildRequires:  pkgconfig(dlog)
+BuildRequires:  pkgconfig(bundle)
+BuildRequires:  pkgconfig(eina)
+BuildRequires:  pkgconfig(ecore)
 #BuildRequires:  pkgconfig(gmock)
 %if 0%{?gcov:1}
 BuildRequires:  lcov
@@ -51,6 +58,12 @@ Best practice tizen gcov objects
 %prep
 %setup -q
 cp %{SOURCE1001} .
+tidlc -p -l C -i ./src/tidl/remote_service.tidl -o remote_service_proxy
+mv remote_service_proxy.c src/
+mv remote_service_proxy.h src/ 
+tidlc -s -l C -i ./src/tidl/stub_service.tidl -o stub_service_stub
+mv stub_service_stub.c src/ 
+mv stub_service_stub.h src/
 
 %build
 %if 0%{?gcov:1}
@@ -89,6 +102,10 @@ install -m 0644 gcov-obj/* %{buildroot}%{_datadir}/gcov/obj
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
+#rm -f src/remote_service_proxy.c
+#rm -f src/remote_service_stub.c
+#rm -f src/remote_service_proxy.h
+#rm -f src/remote_service_stub.h
 
 #%post -n capi-bps-bp-tizen-unittests
 #%if 0%{?gcov:1}

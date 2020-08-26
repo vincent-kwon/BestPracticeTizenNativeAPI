@@ -9,7 +9,7 @@ SET(PREFIX ${CMAKE_INSTALL_PREFIX})
 SET(INC_DIR ${CMAKE_SOURCE_DIR}/include)
 INCLUDE_DIRECTORIES(${INC_DIR})
 
-SET(requires "dlog")
+SET(requires "dlog eina glib-2.0 rpc-port ecore")
 #SET(pc_requires "capi-base-common")
 
 INCLUDE(FindPkgConfig)
@@ -30,8 +30,9 @@ ADD_DEFINITIONS("-DSLP_DEBUG")
 
 SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--as-needed -Wl,--rpath=${LIB_INSTALL_DIR}")
 
+aux_source_directory (. SOURCES)
 add_library(${fw_name} SHARED
-		bptizen_implementation.c
+		${SOURCES}
 		)
 
 TARGET_LINK_LIBRARIES(${fw_name} ${${fw_name}_LDFLAGS})

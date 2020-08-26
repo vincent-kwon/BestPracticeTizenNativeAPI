@@ -1,0 +1,3 @@
+interface stub_service {
+ int stub_send_sync(int remote_id, string body);
+}
