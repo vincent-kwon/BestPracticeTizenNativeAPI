@@ -34,7 +34,7 @@ const char* bp_client_method_name_1 = "bp.client.methodinterface1.method.name";
 const char* bp_manager_bus_name =       "org.tizen.bp.manager.tizen";
 const char* bp_manager_object_path =    "/org/tizen/bps/bp/tizen/manager/object";
 const char* bp_manager_interface_name = "org.tizen.bps.bp.manager.interface";
-const char* bp_manager_method_name_1 = "bp.manager.methodinterface1.method.name";
+const char* bp_manager_method_name_1 = "get";
 const char* param = "This must not be null";
 DBusPendingCall* pending;
 
@@ -55,7 +55,7 @@ static int bptizen_handle_dbus_signal()
 	dbus_error_init(&err);
 
 	// Connect to the bus and check for errors
-	conn = dbus_bus_get(DBUS_BUS_SESSION, &err);
+	conn = dbus_bus_get(DBUS_BUS_SYSTEM, &err);
 
 	// Check for dbus error
 	if (dbus_error_is_set(&err)) 
@@ -71,24 +71,24 @@ static int bptizen_handle_dbus_signal()
 	}
 
 	// Request our name on the bus and check for errors
-	ret = dbus_bus_request_name(conn, bp_client_bus_name, DBUS_NAME_FLAG_REPLACE_EXISTING , &err);
+	//ret = dbus_bus_request_name(conn, bp_client_bus_name, DBUS_NAME_FLAG_REPLACE_EXISTING , &err);
 
 	// For request name, check error
-	if (dbus_error_is_set(&err)) 
+	//if (dbus_error_is_set(&err)) 
 	{
-		dlog_print(DLOG_INFO, LOG_TAG, "Name Error (%s)\n", err.message);
-		dbus_error_free(&err);
+		//dlog_print(DLOG_INFO, LOG_TAG, "Name Error (%s)\n", err.message);
+		//dbus_error_free(&err);
 	}
 
 	// Check for primary for the requested name
-	if (DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER != ret) 
+	//if (DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER != ret) 
 	{
-		dlog_print(DLOG_INFO, LOG_TAG, "Not Primary Owner (%d)\n", ret);
-		exit(1);
+	//	dlog_print(DLOG_INFO, LOG_TAG, "Not Primary Owner (%d)\n", ret);
+	//	exit(1);
 	}
 
     // Try a method call
-	dlog_print(DLOG_INFO, LOG_TAG, "Start remote method call %s\n", bp_manager_bus_name);
+	dlog_print(DLOG_INFO, LOG_TAG, "Start remote method call:: %s\n", bp_manager_bus_name);
 	msg = dbus_message_new_method_call(bp_manager_bus_name, // target for the method call
 	   	 	 	 	 	 	 	bp_manager_object_path, // object to call on
 	                            bp_manager_interface_name, // interface to call on
@@ -107,6 +107,8 @@ static int bptizen_handle_dbus_signal()
 		dlog_print(DLOG_INFO, LOG_TAG, "[Client] Out Of Memory!\n");
 		exit(1);
 	}
+	
+	dlog_print(DLOG_INFO, LOG_TAG, "sent message..dbus_connection_send_with_reply");
 
 	if (NULL == pending) {
 		dlog_print(DLOG_INFO, LOG_TAG, "[Client] Pending Call Null\n");
@@ -268,7 +270,7 @@ static int bptizen_handle_dbus_signal()
 		sleep(1);
 	}
 #endif
-	dbus_connection_close(conn);
+	//dbus_connection_close(conn);
 }
 
 int bptizen_get_one()
