@@ -9,7 +9,7 @@ SET(PREFIX ${CMAKE_INSTALL_PREFIX})
 SET(INC_DIR ${CMAKE_SOURCE_DIR}/include)
 INCLUDE_DIRECTORIES(${INC_DIR})
 
-SET(requires "dlog eina glib-2.0 rpc-port ecore")
+SET(requires "dlog dbus-1 eina glib-2.0 rpc-port ecore")
 #SET(pc_requires "capi-base-common")
 
 INCLUDE(FindPkgConfig)
