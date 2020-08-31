@@ -31,6 +31,11 @@ const char* bp_client_interface_name = "org.tizen.bp.client.interface";
 const char* bp_client_object_name =    "/org/tizen/bp/client/object";
 const char* bp_client_method_name_1 = "bp.client.methodinterface1.method.name";
 
+// TODO(vincent): This must match in dbus related files.
+// In packaing/bps-bp-manager-tizen.service
+//   BusName=org.tizen.bp.manager.tizen
+// In src/org.tizen.bp.manager.tizen.service.in
+//   Name=org.tizen.bp.manager.tizen
 const char* bp_manager_bus_name =       "org.tizen.bp.manager.tizen";
 const char* bp_manager_object_path =    "/org/tizen/bps/bp/tizen/manager/object";
 const char* bp_manager_interface_name = "org.tizen.bps.bp.manager.interface";
