@@ -107,77 +107,81 @@ static int bptizen_handle_dbus_signal()
 	//	exit(1);
 	}
 
-    // Try a method call
-	dlog_print(DLOG_INFO, LOG_TAG, "FF Start remote method call:: %s\n", bpm_bus_name);
-	msg = dbus_message_new_method_call(bpm_bus_name, // target for the method call
-	   	 	 	 	 	 	 	bpm_object_path, // object to call on
-	                            bpm_interface_name, // interface to call on
-    	                        bpm_method_name_1); // method name
-
-    if (msg == NULL)								
+    while (true) 
 	{
-    	dlog_print(DLOG_INFO, LOG_TAG, "dbus_message_new_method_call error... !!\n");
-	}
+		sleep(3);
+	// Try a method call
+		dlog_print(DLOG_INFO, LOG_TAG, "Fuck Start remote method call:: %s\n", bpm_bus_name);
+		msg = dbus_message_new_method_call(bpm_bus_name, // target for the method call
+									bpm_object_path, // object to call on
+									bpm_interface_name, // interface to call on
+									bpm_method_name_1); // method name
 
-	dlog_print(DLOG_INFO, LOG_TAG, "FF End remote method call %s\n", bpm_bus_name);
-	// append arguments
-	dbus_message_iter_init_append(msg, &args);
+		if (msg == NULL)								
+		{
+			dlog_print(DLOG_INFO, LOG_TAG, "dbus_message_new_method_call error... !!\n");
+		}
 
-	if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, &param)) {
-		dlog_print(DLOG_INFO, LOG_TAG, "Out Of Memory!\n");
-		exit(1);
-	}
+		dlog_print(DLOG_INFO, LOG_TAG, "FF End remote method call %s\n", bpm_bus_name);
+		// append arguments
+		dbus_message_iter_init_append(msg, &args);
 
-	// send message and get a handle for a reply
-	if (!dbus_connection_send_with_reply (conn, msg, &pending, -1)) { // -1 is default timeout
-		dlog_print(DLOG_INFO, LOG_TAG, "[Client] Out Of Memory!\n");
-		exit(1);
-	}
-	else
-	{
-    	dlog_print(DLOG_INFO, LOG_TAG, "dbus_connection_send_with_reply Good !!\n");
-	}
-	
-	dlog_print(DLOG_INFO, LOG_TAG, "sent message..dbus_connection_send_with_reply");
+		if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, &param)) {
+			dlog_print(DLOG_INFO, LOG_TAG, "Out Of Memory!\n");
+			exit(1);
+		}
 
-	if (NULL == pending) {
-		dlog_print(DLOG_INFO, LOG_TAG, "[Client] Pending Call Null\n");
-		exit(1);
-	}
-	dbus_connection_flush(conn);
+		// send message and get a handle for a reply
+		if (!dbus_connection_send_with_reply (conn, msg, &pending, -1)) { // -1 is default timeout
+			dlog_print(DLOG_INFO, LOG_TAG, "[Client] Out Of Memory!\n");
+			exit(1);
+		}
+		else
+		{
+			dlog_print(DLOG_INFO, LOG_TAG, "dbus_connection_send_with_reply Good !!\n");
+		}
+		
+		dlog_print(DLOG_INFO, LOG_TAG, "sent message..dbus_connection_send_with_reply");
 
-	if (NULL == msg) {
-	    dlog_print(DLOG_INFO, LOG_TAG, "[Client] Message Null\n");
-		exit(1);
-	}
+		if (NULL == pending) {
+			dlog_print(DLOG_INFO, LOG_TAG, "[Client] Pending Call Null\n");
+			exit(1);
+		}
+		dbus_connection_flush(conn);
 
-	// append arguments
-#if REPLY	
-	dbus_message_iter_init_append(msg, &args);
+		if (NULL == msg) {
+			dlog_print(DLOG_INFO, LOG_TAG, "[Client] Message Null\n");
+			exit(1);
+		}
 
-	if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, &param)) 
-	{
-		dlog_print(DLOG_INFO, LOG_TAG, "[System Server Client] Out Of Memory!\n");
-		exit(1);
-	}
+		// append arguments
+	#if REPLY	
+		dbus_message_iter_init_append(msg, &args);
 
-	// send message and get a handle for a reply
-	if (!dbus_connection_send_with_reply (conn, msg, &pending, -1)) 
-	{ // -1 is default timeout
-		dlog_print(DLOG_INFO, LOG_TAG, "[System Server Client] Out Of Memory!\n");
-		exit(1);
-	}
+		if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, &param)) 
+		{
+			dlog_print(DLOG_INFO, LOG_TAG, "[System Server Client] Out Of Memory!\n");
+			exit(1);
+		}
 
-	if (NULL == pending) {
-		dlog_print(DLOG_INFO, LOG_TAG, "[System Server Client] Pending Call Null\n");
-		exit(1);
+		// send message and get a handle for a reply
+		if (!dbus_connection_send_with_reply (conn, msg, &pending, -1)) 
+		{ // -1 is default timeout
+			dlog_print(DLOG_INFO, LOG_TAG, "[System Server Client] Out Of Memory!\n");
+			exit(1);
+		}
+
+		if (NULL == pending) {
+			dlog_print(DLOG_INFO, LOG_TAG, "[System Server Client] Pending Call Null\n");
+			exit(1);
+		}
+		dbus_connection_flush(conn);
+		// free message
+		dbus_message_unref(msg);
+		dlog_print(DLOG_INFO, LOG_TAG, "[System Server Client]  End of remote method call\n");
+	#endif			
+		//dbus_connection_close(conn);
 	}
-	dbus_connection_flush(conn);
-    // free message
-	dbus_message_unref(msg);
-    dlog_print(DLOG_INFO, LOG_TAG, "[System Server Client]  End of remote method call\n");
-#endif			
-	//dbus_connection_close(conn);
 }
 
 int bptizen_get_one()
